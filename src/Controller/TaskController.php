@@ -6,32 +6,18 @@ use App\Todolist\Service\Database;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-class TaskController
+class TaskController extends AbstractController
 {
     public function index()
     {
-        // echo "page d'accueil";
-        // determiner le dossier qui va contenir les fichiers twig
-        $loader = new FilesystemLoader("../templates");
-        // inintialiser twig
-        $twig = new Environment($loader);
-
         $taskRepository = new TaskRepository();
         $tasks = $taskRepository->index();
-        // echo "<pre>" ; 
-        // var_dump($tasks);
-        // echo "</pre>";
-        // rendre une vue
-        echo $twig->render('taskpage.twig', [
+        $this->render('taskpage.twig', [
             'tasks' => $tasks
         ]);
     }
 
     public function new(){
-        // determiner le dossier qui va contenir les fichiers twig
-        $loader = new FilesystemLoader("../templates");
-        // inintialiser twig
-        $twig = new Environment($loader);
 
         if ($_SERVER['REQUEST_METHOD'] === "POST"){
             $taskrepository = new TaskRepository();
@@ -41,20 +27,15 @@ class TaskController
             header("Location: http://localhost/todo_list/public/task/");
         }
 
-        echo $twig->render('taskNewPage.twig', []);
+        $this->render('taskNewPage.twig', []);
     }
 
     public function show(int $id)
     {
-        // determiner le dossier qui va contenir les fichiers twig
-        $loader = new FilesystemLoader("../templates");
-        // inintialiser twig
-        $twig = new Environment($loader);
-
         $taskRepository = new TaskRepository();
         $task = $taskRepository->find($id);       
         
-        echo $twig->render('taskDetailPage.twig', [
+        $this->render('taskDetailPage.twig', [
             'task' => $task
         ]);
     }
@@ -70,11 +51,6 @@ class TaskController
 
     public function update(int $id)
     {
-        // determiner le dossier qui va contenir les fichiers twig
-        $loader = new FilesystemLoader("../templates");
-        // inintialiser twig
-        $twig = new Environment($loader);
-        // se connecter à la base de donnée
         $taskRepository = new TaskRepository();
         $task = $taskRepository->find($id);
 
@@ -88,7 +64,7 @@ class TaskController
             header("Location: http://localhost/todo_list/public/task/");
         }
 
-        echo $twig->render('taskUpdatePage.twig', [
+        $this->render('taskUpdatePage.twig', [
             'task' => $task,
             'optionList' => ["En attente", "terminée"]
         ]);
